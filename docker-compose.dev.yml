@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: assistente_mysql_dev
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-dev123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-projeto_ia}
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+      - ./database_setup.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - assistente_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  app:
+    build: .
+    container_name: assistente_app_dev
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-dev123456}
+      DB_NAME: ${MYSQL_DATABASE:-projeto_ia}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-not-for-production}
+    ports:
+      - "${APP_PORT:-5000}:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - assistente_network
+    volumes:
+      - .:/app
+    command: python app.py
+
+volumes:
+  mysql_data_dev:
+
+networks:
+  assistente_network:
+    driver: bridge

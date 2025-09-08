@@ -20,31 +20,51 @@ Sistema de chat com IA especializada em finanças pessoais, desenvolvido com foc
 
 ## 🚀 Instalação
 
-### 1. Clonar e Configurar
+### 🐳 **Opção 1: Docker (Recomendado)**
+```bash
+git clone <repo>
+cd projeto-IA-py
+cp .env.docker .env
+# Edite .env e configure sua GROQ_API_KEY
+./docker-run.sh
+```
+
+### 💻 **Opção 2: Instalação Local**
 ```bash
 git clone <repo>
 cd projeto-IA-py
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# ou venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-```
-
-### 2. Configurar Banco
-```bash
 mysql -u root -p -e "CREATE DATABASE projeto_ia;"
 mysql -u root -p projeto_ia < database_setup.sql
-```
-
-### 3. Variáveis de Ambiente
-```bash
 cp .env.example .env
 # Edite o .env com suas configurações
+python app.py
 ```
 
-### 4. Executar
+### 🐳 **Comandos Docker**
+
+**Desenvolvimento:**
 ```bash
-python app.py
+# Iniciar
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
+```
+
+**Produção:**
+```bash
+# Configurar
+cp .env.production.example .env.production
+# Edite .env.production com valores reais
+
+# Deploy
+./deploy.sh
 ```
 
 ## 📁 Arquitetura
