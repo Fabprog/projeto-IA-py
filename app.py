@@ -76,6 +76,12 @@ def registrar():
         try:
             nome = request.form.get("nome", "").strip()
             senha = request.form.get("senha", "")
+            confirmar_senha = request.form.get("confirmar_senha", "")
+            
+            # Validação de senhas iguais
+            if senha != confirmar_senha:
+                flash("Ops! As senhas não são iguais. Confere aí! 😅")
+                return render_template("registrar.html")
             
             # Validação
             is_valid, error_msg = validation_service.validate_user_input(nome, senha)
