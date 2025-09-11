@@ -13,6 +13,7 @@ class DatabaseManager:
     def __init__(self):
         self.config = {
             'host': Config.DB_HOST,
+            'port': getattr(Config, 'DB_PORT', 3306),
             'user': Config.DB_USER,
             'password': Config.DB_PASSWORD,
             'database': Config.DB_NAME,
